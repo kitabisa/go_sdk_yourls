@@ -366,7 +366,7 @@ func TestSendAction(t *testing.T) {
 			)
 
 			if test.expectedError == nil {
-				assert.NilError(t, err)
+				assert.NilError(tt, err)
 			} else {
 				assert.Error(
 					tt,
@@ -381,7 +381,7 @@ func TestSendAction(t *testing.T) {
 func BenchmarkSendAction(b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		for name, test := range tests {
-			b.Run(name, func(b *testing.B) {
+			b.Run(name, func(bb *testing.B) {
 				handler := anyHandler(test.responseString, 200)
 				httpClient, teardown := testingHTTPClient(handler, false)
 				defer teardown()
@@ -390,29 +390,29 @@ func BenchmarkSendAction(b *testing.B) {
 
 				if resp != nil {
 					assert.Equal(
-						b,
+						bb,
 						resp.StatusCode,
 						http.StatusOK,
 					)
 				}
 
 				assert.DeepEqual(
-					b,
+					bb,
 					test.expectedResponse,
 					returnData,
 				)
 
 				assert.DeepEqual(
-					b,
+					bb,
 					test.expectedErrorResponse,
 					errorResponse,
 				)
 
 				if test.expectedError == nil {
-					assert.NilError(b, err)
+					assert.NilError(bb, err)
 				} else {
 					assert.Error(
-						b,
+						bb,
 						err,
 						test.expectedError.Error(),
 					)
