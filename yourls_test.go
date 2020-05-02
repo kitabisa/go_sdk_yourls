@@ -338,86 +338,86 @@ func anyHandler(bodyResponse string, httpStatus int) (handler http.Handler) {
 
 func TestSendAction(t *testing.T) {
 	for name, test := range tests {
-		handler := anyHandler(test.responseString, 200)
-		httpClient, teardown := testingHTTPClient(handler, false)
-		defer teardown()
-		yourls := setYourlsBuild(httpClient)
-
-		t.Logf("Running test case: %s\n", name)
-		returnData, errorResponse, resp, err := yourls.SendAction(test.requestStruct)
-
-		if resp != nil {
-			assert.Equal(
-				t,
-				resp.StatusCode,
-				http.StatusOK,
-			)
-		}
-
-		assert.DeepEqual(
-			t,
-			test.expectedResponse,
-			returnData,
-		)
-
-		assert.DeepEqual(
-			t,
-			test.expectedErrorResponse,
-			errorResponse,
-		)
-
-		if test.expectedError == nil {
-			assert.NilError(t, err)
-		} else {
-			assert.Error(
-				t,
-				err,
-				test.expectedError.Error(),
-			)
-		}
-	}
-}
-
-func BenchmarkSendAction(b *testing.B) {
-	for n := 0; n < b.N; n++ {
-		for name, test := range tests {
+		t.Run(name, func(tt *testing.T) {
 			handler := anyHandler(test.responseString, 200)
 			httpClient, teardown := testingHTTPClient(handler, false)
 			defer teardown()
 			yourls := setYourlsBuild(httpClient)
-
-			b.Logf("Running test case: %s\n", name)
 			returnData, errorResponse, resp, err := yourls.SendAction(test.requestStruct)
 
 			if resp != nil {
 				assert.Equal(
-					b,
+					tt,
 					resp.StatusCode,
 					http.StatusOK,
 				)
 			}
 
 			assert.DeepEqual(
-				b,
+				tt,
 				test.expectedResponse,
 				returnData,
 			)
 
 			assert.DeepEqual(
-				b,
+				tt,
 				test.expectedErrorResponse,
 				errorResponse,
 			)
 
 			if test.expectedError == nil {
-				assert.NilError(b, err)
+				assert.NilError(t, err)
 			} else {
 				assert.Error(
-					b,
+					tt,
 					err,
 					test.expectedError.Error(),
 				)
 			}
+		})
+	}
+}
+
+func BenchmarkSendAction(b *testing.B) {
+	for n := 0; n < b.N; n++ {
+		for name, test := range tests {
+			b.Run(name, func(b *testing.B) {
+				handler := anyHandler(test.responseString, 200)
+				httpClient, teardown := testingHTTPClient(handler, false)
+				defer teardown()
+				yourls := setYourlsBuild(httpClient)
+				returnData, errorResponse, resp, err := yourls.SendAction(test.requestStruct)
+
+				if resp != nil {
+					assert.Equal(
+						b,
+						resp.StatusCode,
+						http.StatusOK,
+					)
+				}
+
+				assert.DeepEqual(
+					b,
+					test.expectedResponse,
+					returnData,
+				)
+
+				assert.DeepEqual(
+					b,
+					test.expectedErrorResponse,
+					errorResponse,
+				)
+
+				if test.expectedError == nil {
+					assert.NilError(b, err)
+				} else {
+					assert.Error(
+						b,
+						err,
+						test.expectedError.Error(),
+					)
+				}
+			})
 		}
 	}
 }
