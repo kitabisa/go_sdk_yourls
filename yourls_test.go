@@ -306,11 +306,11 @@ func init() {
 }
 
 func setYourlsBuild(httpClient *http.Client) BuildYourls {
-	yourlsBuilder := &Builder{}
-	service := &Service{}
+	yourlsBuilder := Builder{}
+	service := Service{}
 	baseURL, _ := url.Parse(yoursURL)
 
-	yourlsBuilder.SetBuilder(service)
+	yourlsBuilder.SetBuilder(&service)
 	yourlsBuilder.SetHTTPClient(httpClient)
 	yourlsBuilder.SetBaseURL(baseURL)
 	yourlsBuilder.SetToken(signature)

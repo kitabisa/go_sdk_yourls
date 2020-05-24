@@ -30,11 +30,11 @@ import (
 )
 
 func setYourlsBuild(httpClient *http.Client, config *Config) yourls.BuildYourls {
-	yourlsBuilder := &yourls.Builder{}
-	service := &yourls.Service{}
+	yourlsBuilder := yourls.Builder{}
+	service := yourls.Service{}
 	baseURL, _ := url.Parse(config.fYoursURL)
 
-	yourlsBuilder.SetBuilder(service)
+	yourlsBuilder.SetBuilder(&service)
 	yourlsBuilder.SetHTTPClient(httpClient)
 	yourlsBuilder.SetBaseURL(baseURL)
 	yourlsBuilder.SetToken(config.fSignature)
