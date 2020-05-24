@@ -27,34 +27,18 @@ func (c *Service) SendAction(request interface{}) (returnData interface{}, error
 	case ActionShortURLRequest:
 		returnData = &ActionShortURLResponse{}
 		r.Action = ShortURL
-		r.Format = Json
-		r.Signature = c.cO.Token
-		r.UserName = c.cO.Username
-		r.Password = c.cO.Password
 		resp, err = c.sendActionUnknown(r, returnData, errorResponse)
 	case ActionExpandRequest:
 		returnData = &ActionExpandResponse{}
 		r.Action = Expand
-		r.Format = Json
-		r.Signature = c.cO.Token
-		r.UserName = c.cO.Username
-		r.Password = c.cO.Password
 		resp, err = c.sendActionUnknown(r, returnData, errorResponse)
 	case ActionURLStatsRequest:
 		returnData = &ActionURLStatsResponse{}
 		r.Action = URLStats
-		r.Format = Json
-		r.Signature = c.cO.Token
-		r.UserName = c.cO.Username
-		r.Password = c.cO.Password
 		resp, err = c.sendActionUnknown(r, returnData, errorResponse)
 	case ActionDBStatsRequest:
 		returnData = &ActionDBStatsSimpleResponse{}
 		r.Action = DBStats
-		r.Format = Json
-		r.Signature = c.cO.Token
-		r.UserName = c.cO.Username
-		r.Password = c.cO.Password
 		resp, err = c.sendActionUnknown(r, returnData, errorResponse)
 	case ActionStatsRequest:
 		if r.Limit == 0 {
@@ -63,10 +47,6 @@ func (c *Service) SendAction(request interface{}) (returnData interface{}, error
 			returnData = &ActionStatsFullResponse{}
 		}
 		r.Action = Stats
-		r.Format = Json
-		r.Signature = c.cO.Token
-		r.UserName = c.cO.Username
-		r.Password = c.cO.Password
 		resp, err = c.sendActionUnknown(r, returnData, errorResponse)
 	default:
 		returnData = &ActionUnknownResponse{}
@@ -77,7 +57,7 @@ func (c *Service) SendAction(request interface{}) (returnData interface{}, error
 }
 
 func (c *Service) sendActionUnknown(request interface{}, response interface{}, errorResponse interface{}) (resp *http.Response, err error) {
-	req, err := c.newRequest(http.MethodPost, YourlsAPIEndpoint, nil)
+	req, err := c.newRequest(http.MethodPost, ApiEndpoint, nil)
 
 	if err != nil {
 		return
@@ -85,6 +65,17 @@ func (c *Service) sendActionUnknown(request interface{}, response interface{}, e
 
 	q := req.URL.Query()
 	for k, v := range c.structToMap(request) {
+		q.Add(k, v)
+	}
+
+	formatAndSignature := FormatAndSignature{
+		Format:    Json,
+		Signature: c.cO.Token,
+		UserName:  c.cO.Username,
+		Password:  c.cO.Password,
+	}
+
+	for k, v := range c.structToMap(formatAndSignature) {
 		q.Add(k, v)
 	}
 

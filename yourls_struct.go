@@ -14,74 +14,89 @@ type Options struct {
 	Password   string
 }
 
+// OutputFormat ...
 type OutputFormat string
+
+// Action ...
 type Action string
+
+// Filter ...
 type Filter string
 
 const (
-	FormKeyTagName string       = "form_key"
-	Json           OutputFormat = "json"
-	ShortURL       Action       = "shorturl"
-	Expand         Action       = "expand"
-	Stats          Action       = "stats"
-	URLStats       Action       = "url-stats"
-	DBStats        Action       = "db-stats"
-	Top            Filter       = "top"
-	Bottom         Filter       = "bottom"
-	Rand           Filter       = "rand"
-	Last           Filter       = "last"
+
+	// FormKeyTagName ...
+	FormKeyTagName string = "form_key"
+
+	// Json ...
+	Json OutputFormat = "json"
+
+	// ShortURL ...
+	ShortURL Action = "shorturl"
+
+	// Expand ...
+	Expand Action = "expand"
+
+	// Stats ...
+	Stats Action = "stats"
+
+	// URLStats ...
+	URLStats Action = "url-stats"
+
+	// DBStats ...
+	DBStats Action = "db-stats"
+
+	// Top ...
+	Top Filter = "top"
+
+	// Bottom ...
+	Bottom Filter = "bottom"
+
+	// Rand ...
+	Rand Filter = "rand"
+
+	// Last ...
+	Last Filter = "last"
 )
 
-// ActionShortURLRequest ...
-type ActionShortURLRequest struct {
-	URL       string       `form_key:"url"`
-	Keyword   string       `form_key:"keyword"`
-	Title     string       `form_key:"title"`
-	Action    Action       `form_key:"action"`
+// FormatAndSignature ...
+type FormatAndSignature struct {
 	Format    OutputFormat `form_key:"format"`
 	Signature string       `form_key:"signature"`
 	UserName  string       `form_key:"username"`
 	Password  string       `form_key:"password"`
+}
+
+// ActionShortURLRequest ...
+type ActionShortURLRequest struct {
+	URL     string `form_key:"url"`
+	Keyword string `form_key:"keyword"`
+	Title   string `form_key:"title"`
+	Action  Action `form_key:"action"`
 }
 
 // ActionExpandRequest ...
 type ActionExpandRequest struct {
-	ShortURL  string       `form_key:"shorturl"`
-	Action    Action       `form_key:"action"`
-	Format    OutputFormat `form_key:"format"`
-	Signature string       `form_key:"signature"`
-	UserName  string       `form_key:"username"`
-	Password  string       `form_key:"password"`
+	ShortURL string `form_key:"shorturl"`
+	Action   Action `form_key:"action"`
 }
 
 // ActionURLStatsRequest ...
 type ActionURLStatsRequest struct {
-	ShortURL  string       `form_key:"shorturl"`
-	Action    Action       `form_key:"action"`
-	Format    OutputFormat `form_key:"format"`
-	Signature string       `form_key:"signature"`
-	UserName  string       `form_key:"username"`
-	Password  string       `form_key:"password"`
+	ShortURL string `form_key:"shorturl"`
+	Action   Action `form_key:"action"`
 }
 
 // ActionDBStatsRequest ...
 type ActionDBStatsRequest struct {
-	Action    Action       `form_key:"action"`
-	Format    OutputFormat `form_key:"format"`
-	Signature string       `form_key:"signature"`
-	UserName  string       `form_key:"username"`
-	Password  string       `form_key:"password"`
+	Action Action `form_key:"action"`
 }
 
 // ActionStatsRequest ...
 type ActionStatsRequest struct {
-	Filter    Filter       `form_key:"filter"`
-	Limit     int          `form_key:"limit"`
-	Action    Action       `form_key:"action"`
-	Format    OutputFormat `form_key:"format"`
-	Signature string       `form_key:"signature"`
-	UserName  string       `form_key:"username"`
-	Password  string       `form_key:"password"`
+	Filter Filter `form_key:"filter"`
+	Limit  int    `form_key:"limit"`
+	Action Action `form_key:"action"`
 }
 
 // ActionShortURL ...
@@ -134,7 +149,7 @@ type ActionExpandResponse struct {
 	StatusCode int    `json:"statusCode,omitempty"`
 }
 
-// ActionShortURLResponse ...
+// ActionURLStatsResponse ...
 type ActionURLStatsResponse struct {
 	StatusCode int            `json:"statusCode,omitempty"`
 	Message    string         `json:"message,omitempty"`
@@ -154,7 +169,7 @@ type ActionStatsSimpleResponse struct {
 	StatusCode int         `json:"statusCode,omitempty"`
 }
 
-// ActionStatsSimpleResponse ...
+// ActionStatsFullResponse ...
 type ActionStatsFullResponse struct {
 	Links      map[string]ActionShortURL `json:"links,omitempty"`
 	Stats      ActionStats               `json:"stats,omitempty"`

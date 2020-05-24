@@ -16,18 +16,18 @@ import (
 )
 
 const (
-	yoursURL   string = "http://kb.in"
-	username   string = "default"
-	password   string = "default"
-	signature  string = "f6d89851aa"
-	longURL    string = "https://url.com/?a7"
-	keyword    string = "a7"
-	shortURL   string = yoursURL + "/" + keyword
-	title      string = "Link URL"
-	dateString string = "2020-04-30 21:08:44"
-	ipString   string = "172.17.0.1"
-	success    string = "success"
-	s200       string = "200"
+	yoursURL   = "http://kb.in"
+	username   = "default"
+	password   = "default"
+	signature  = "f6d89851aa"
+	longURL    = "https://url.com/?a7"
+	keyword    = "a7"
+	shortURL   = yoursURL + "/" + keyword
+	title      = "Link URL"
+	dateString = "2020-04-30 21:08:44"
+	ipString   = "172.17.0.1"
+	success    = "success"
+	s200       = "200"
 )
 
 type testData struct {
@@ -226,9 +226,11 @@ func init() {
 		expectedError: nil,
 	}
 
+	rand.Seed(time.Now().Unix())
+	filter := [...]Filter{Top, Bottom, Rand, Last}
 	tests["stats-full"] = testData{
 		requestStruct: ActionStatsRequest{
-			Filter: Top,
+			Filter: filter[rand.Intn(len(filter))],
 			Limit:  2,
 		},
 		responseString: fmt.Sprintf(
@@ -313,18 +315,18 @@ func testingHTTPClient(handler http.Handler, isHTTPS bool) (*http.Client, func()
 			Timeout: 1000 * time.Millisecond,
 		}
 		return cli, s.Close
-	} else {
-		s := httptest.NewServer(handler)
-		cli := &http.Client{
-			Transport: &http.Transport{
-				DialContext: func(_ context.Context, network, _ string) (net.Conn, error) {
-					return net.Dial(network, s.Listener.Addr().String())
-				},
-			},
-			Timeout: 1000 * time.Millisecond,
-		}
-		return cli, s.Close
 	}
+
+	s := httptest.NewServer(handler)
+	cli := &http.Client{
+		Transport: &http.Transport{
+			DialContext: func(_ context.Context, network, _ string) (net.Conn, error) {
+				return net.Dial(network, s.Listener.Addr().String())
+			},
+		},
+		Timeout: 1000 * time.Millisecond,
+	}
+	return cli, s.Close
 }
 
 func anyHandler(bodyResponse string, httpStatus int) (handler http.Handler) {
