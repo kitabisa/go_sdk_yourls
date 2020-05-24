@@ -41,6 +41,26 @@ type testData struct {
 var tests = make(map[string]testData)
 
 func init() {
+
+	tests["unknown"] = testData{
+		requestStruct: struct {
+			AnyString string
+		}{
+			AnyString: "asdasd",
+		},
+		responseString: fmt.Sprintf(
+			`{
+				"Status": "",
+				"Code": "",
+				"errorCode": "",
+				"message": ""
+			}`,
+		),
+		expectedResponse:      &ActionUnknownResponse{},
+		expectedErrorResponse: &GeneralErrorResponse{},
+		expectedError:         nil,
+	}
+
 	tests["shorturl"] = testData{
 		requestStruct: ActionShortURLRequest{
 			URL:     longURL,
